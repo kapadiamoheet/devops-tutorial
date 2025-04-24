@@ -1,5 +1,21 @@
 #!/bin/bash
 
+
+
+################################################################################################################################
+# About: This is simple script to get the list of collborators from a github repo:
+# Author: Mohit Kapadia
+# Date: April 24, 2025
+#
+# Version: 1
+# Input: export 'username' and 'token' ie. github username and  classic token from github account 
+# Arugments: It takes two arguments first=organisationName second=repoName eg. 'bash list-user.sh kapadiamoheet devops-tutorial'
+# Output: list of collaborator's name
+#
+################################################################################################################################
+
+
+
 # GitHub API URL
 API_URL="https://api.github.com"
 
@@ -22,6 +38,11 @@ function github_api_get {
 
 # Function to list users with read access to the repository
 function list_users_with_read_access {
+    # check if the user has passed the required arguments
+    echo "Will check for argument count"
+    check_args
+    echo "Arugments are found"
+
     local endpoint="repos/${REPO_OWNER}/${REPO_NAME}/collaborators"
 
     # Fetch the list of collaborators on the repository
@@ -36,7 +57,16 @@ function list_users_with_read_access {
     fi
 }
 
-# Main script
 
+function check_args {
+    expected_args=2
+    if [[ "$#" -e "$expected_args" ]]; then
+	echo "Please pass organizationName and repoName as arguments"
+	exit 1
+    fi	
+}
+
+# Main script
+#
 echo "Listing users with read access to ${REPO_OWNER}/${REPO_NAME}..."
 list_users_with_read_access
