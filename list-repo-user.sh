@@ -40,14 +40,14 @@ function github_api_get {
 function list_users_with_read_access {
     # check if the user has passed the required arguments
     echo "Will check for argument count"
-    check_args
+    check_args "$@"
     echo "Arugments are found"
 
     local endpoint="repos/${REPO_OWNER}/${REPO_NAME}/collaborators"
 
     # Fetch the list of collaborators on the repository
+#    collaborators="$(github_api_get "$endpoint")"
     collaborators="$(github_api_get "$endpoint" | jq -r '.[] | select(.permissions.pull == true) | .login')"
-
     # Display the list of collaborators with read access
     if [[ -z "$collaborators" ]]; then
         echo "No users with read access found for ${REPO_OWNER}/${REPO_NAME}."
@@ -60,7 +60,7 @@ function list_users_with_read_access {
 
 function check_args {
     expected_args=2
-    if [[ "$#" -e "$expected_args" ]]; then
+    if [[ "$#" -ne "$expected_args" ]]; then
 	echo "Please pass organizationName and repoName as arguments"
 	exit 1
     fi	
@@ -69,4 +69,4 @@ function check_args {
 # Main script
 #
 echo "Listing users with read access to ${REPO_OWNER}/${REPO_NAME}..."
-list_users_with_read_access
+list_users_with_read_access "$@"
